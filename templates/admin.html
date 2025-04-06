@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Voting Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        h1, h2 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f2f2f2; }
+        .button { display: inline-block; padding: 8px 16px; background-color: #0066cc; color: white; 
+                 text-decoration: none; border-radius: 4px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <a href="{{ url_for('create_event') }}" class="button">Create New Event</a>
+    
+    <h2>All Events</h2>
+    {% if events %}
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            {% for event_id, event in events.items() %}
+                {% set is_active = current_time < event.end_time|string %}
+                <tr>
+                    <td>{{ event.title }}</td>
+                    <td>{{ event.description[:50] }}{% if event.description|length > 50 %}...{% endif %}</td>
+                    <td>{{ event.end_time }}</td>
+                    <td>
+                        {% if is_active %}Active{% else %}Ended{% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('event_detail', event_id=event_id) }}">View</a> |
+                        <a href="{{ url_for('results', event_id=event_id) }}">Results</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No events created yet.</p>
+    {% endif %}
+    
+    <a href="{{ url_for('admin_logout') }}" class="button" style="background-color: #cc0000;">Logout</a>
+    <a href="{{ url_for('index') }}" class="button" style="background-color: #666;">Back to Home</a>
+</body>
+</html>

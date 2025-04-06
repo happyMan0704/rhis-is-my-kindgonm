@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results - {{ event.title }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        h1, h2 { color: #333; }
+        .result-item { margin-bottom: 10px; }
+        .result-bar { background-color: #0066cc; height: 20px; display: inline-block; }
+        .back-link { margin-top: 20px; display: block; }
+        .timer { font-size: 0.9em; color: #666; margin-bottom: 15px; }
+        .event-info { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Results: {{ event.title }}</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <div class="event-info">
+        <div class="timer">Event ended at: {{ event.end_time_formatted }}</div>
+        <p>{{ event.description }}</p>
+    </div>
+    
+    <h2>Voting Results</h2>
+    
+    {% if event.votes %}
+        {% set total_votes = namespace(value=0) %}
+        {% for count in event.votes.values() %}
+            {% set total_votes.value = total_votes.value + count %}
+        {% endfor %}
+        
+        <p>Total votes: {{ total_votes.value }}</p>
+        
+        {% for option in event.options %}
+            {% set votes = event.votes.get(option, 0) %}
+            {% set percentage = (votes / total_votes.value * 100) if total_votes.value > 0 else 0 %}
+            <div class="result-item">
+                <div>{{ option }}: {{ votes }} vote(s) ({{ "%.1f"|format(percentage) }}%)</div>
+                <div class="result-bar" style="width: calc({{ percentage }}% + 0px)"></div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No votes have been cast for this event.</p>
+    {% endif %}
+    
+    <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
+</body>
+</html>

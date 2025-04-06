@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login - Voting Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        h1 { color: #333; }
+        .login-form { max-width: 300px; margin: 0 auto; }
+        input[type="password"] { width: 100%; padding: 8px; margin: 10px 0; }
+        button { padding: 8px 16px; background-color: #0066cc; color: white; border: none; cursor: pointer; }
+        .back-link { display: block; margin-top: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>Admin Login</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <div class="login-form">
+        <form action="{{ url_for('admin_login') }}" method="post">
+            <div>
+                <label for="password">Admin Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    
+    <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
+</body>
+</html>

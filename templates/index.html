@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Voting Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .section { margin-bottom: 30px; }
+        h1, h2 { color: #333; }
+        .event-list { display: flex; overflow-x: auto; gap: 15px; padding: 10px 0; }
+        .event-card { border: 1px solid #ddd; padding: 15px; min-width: 200px; border-radius: 5px; }
+        .event-card h3 { margin-top: 0; }
+        .event-card a { display: block; text-decoration: none; color: #0066cc; margin-top: 10px; }
+        .timer { font-size: 0.8em; color: #666; margin-bottom: 5px; }
+        .voted-badge { background-color: #4CAF50; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.7em; display: inline-block; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Voting Platform</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <div class="section">
+        <h2>Active Events</h2>
+        {% if active_events %}
+            <div class="event-list">
+                {% for event_id, event in active_events.items() %}
+                    <div class="event-card">
+                        <div class="timer">Ends at: {{ event.end_time_formatted }}</div>
+                        <h3>{{ event.title }}</h3>
+                        {% if event_id in voted_events %}
+                            <div class="voted-badge">You voted</div>
+                        {% endif %}
+                        <p>{{ event.description }}</p>
+                        <a href="{{ url_for('event_detail', event_id=event_id) }}">View Event</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No active events at the moment.</p>
+        {% endif %}
+    </div>
+    
+    <div class="section">
+        <h2>Finished Events</h2>
+        {% if finished_events %}
+            <div class="event-list">
+                {% for event_id, event in finished_events.items() %}
+                    <div class="event-card">
+                        <h3>{{ event.title }}</h3>
+                        <p>{{ event.description }}</p>
+                        <a href="{{ url_for('results', event_id=event_id) }}">View Results</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No finished events yet.</p>
+        {% endif %}
+    </div>
+    
+    <p><a href="{{ url_for('admin') }}">Admin Area</a></p>
+</body>
+</html>

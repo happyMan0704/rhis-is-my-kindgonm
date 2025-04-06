@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ event.title }} - Voting Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        h1, h2 { color: #333; }
+        .option { margin-bottom: 10px; }
+        .back-link { margin-top: 20px; display: block; }
+        .timer { font-size: 0.9em; color: #666; margin-bottom: 15px; }
+        .voted-notice { background-color: #f8f8f8; border-left: 4px solid #4CAF50; padding: 10px; margin: 15px 0; }
+    </style>
+</head>
+<body>
+    <h1>{{ event.title }}</h1>
+    <div class="timer">Ends at: {{ event.end_time_formatted }}</div>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <p>{{ event.description }}</p>
+    
+    {% if active %}
+        {% if has_voted %}
+            <div class="voted-notice">
+                <p>You have already voted on this event. Thank you for participating!</p>
+                <p>You can view the results after the event ends.</p>
+            </div>
+        {% else %}
+            <h2>Cast Your Vote</h2>
+            <form action="{{ url_for('vote', event_id=event_id) }}" method="post">
+                {% for option in event.options %}
+                    <div class="option">
+                        <input type="radio" name="option" id="option-{{ loop.index }}" value="{{ option }}" required>
+                        <label for="option-{{ loop.index }}">{{ option }}</label>
+                    </div>
+                {% endfor %}
+                <button type="submit">Submit Vote</button>
+            </form>
+        {% endif %}
+    {% else %}
+        <p>This event has ended. <a href="{{ url_for('results', event_id=event_id) }}">View results</a>.</p>
+    {% endif %}
+    
+    <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
+</body>
+</html>
