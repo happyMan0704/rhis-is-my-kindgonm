@@ -225,4 +225,4 @@ def results(event_id):
     return render_template('results.html', event=event, event_id=event_id)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
