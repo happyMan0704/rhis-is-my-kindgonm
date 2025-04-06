@@ -6,6 +6,7 @@ import uuid
 import dotenv
 from dotenv import load_dotenv
 import os
+import time
 load_dotenv()
 password=os.getenv("PASSWORD")
 
@@ -192,7 +193,7 @@ def create_event():
             minutes=duration_minutes,
             seconds=duration_seconds
         )
-        end_time = datetime.now() + duration
+        end_time = datetime.now() + duration +timedelta(hours=5, minutes=30, seconds=1)
         
         data = load_data()
         data["events"][event_id] = {
