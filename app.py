@@ -43,7 +43,7 @@ ADMIN_PASSWORD = password  # Change this in production
 @app.route('/')
 def index():
     data = load_data()
-    current_time = datetime.now()
+    current_time = datetime.now()+timedelta(hours=5, minutes=30, seconds=1)
     
     # Separate active and finished events
     active_events = {}
@@ -75,7 +75,7 @@ def event_detail(event_id):
         flash("Event not found.")
         return redirect(url_for('index'))
     
-    current_time = datetime.now()
+    current_time = datetime.now()+timedelta(hours=5, minutes=30, seconds=1)
     end_time = datetime.fromisoformat(event["end_time"])
     event_active = current_time <= end_time
     
@@ -101,7 +101,7 @@ def vote(event_id):
         flash("Event not found.")
         return redirect(url_for('index'))
     
-    current_time = datetime.now()
+    current_time = datetime.now()+timedelta(hours=5, minutes=30, seconds=1)
     end_time = datetime.fromisoformat(event["end_time"])
     
     if current_time > end_time:
@@ -138,7 +138,7 @@ def admin():
         return render_template('admin_login.html')
     
     data = load_data()
-    current_time = datetime.now().isoformat()
+    current_time = datetime.now().isoformat()+timedelta(hours=5, minutes=30, seconds=1).isoformat()
     return render_template('admin.html', events=data["events"], current_time=current_time)
 
 @app.route('/admin/login', methods=['POST'])
