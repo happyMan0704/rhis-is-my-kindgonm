@@ -138,7 +138,7 @@ def admin():
         return render_template('admin_login.html')
     
     data = load_data()
-    current_time = datetime.now().isoformat()+timedelta(hours=5, minutes=30, seconds=1).isoformat()
+    current_time = datetime.now().isoformat()+timedelta(hours=5, minutes=30, seconds=1)
     return render_template('admin.html', events=data["events"], current_time=current_time)
 
 @app.route('/admin/login', methods=['POST'])
